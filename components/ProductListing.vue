@@ -25,7 +25,7 @@ const sorted = computed(() => {
   <div>
     <!-- Header: title and intro beside a portrait photo of the category being worn -->
     <header class="bg-stone pt-[96px] sm:pt-[104px]">
-      <div class="container-page grid items-end gap-8 py-10 md:grid-cols-[1fr,minmax(0,360px)] md:py-14">
+      <div class="container-page grid items-center gap-8 py-10 md:grid-cols-[1fr,minmax(0,440px)] md:py-12">
         <div class="hero-copy">
           <nav aria-label="Breadcrumb" class="label text-ink-soft">
             <ol class="flex gap-2">
@@ -34,17 +34,17 @@ const sorted = computed(() => {
               <li aria-current="page" class="text-ink">{{ props.active ? CATEGORY_INFO[props.active].label : 'Shop all' }}</li>
             </ol>
           </nav>
-          <h1 class="mt-5 text-display-lg">{{ props.heading }}</h1>
+          <h1 class="mt-5 text-display-md">{{ props.heading }}</h1>
           <p class="mt-4 max-w-lg leading-relaxed text-ink-soft">{{ props.intro }}</p>
         </div>
-        <div class="hidden aspect-[4/5] overflow-hidden md:block">
+        <div class="hidden aspect-[4/3] overflow-hidden md:block">
           <NuxtImg
             :src="banner.src"
             :alt="banner.alt"
-            width="720"
-            height="900"
+            width="880"
+            height="660"
             fit="crop"
-            sizes="360px"
+            sizes="440px"
             preload
             class="hero-photo h-full w-full object-cover"
           />

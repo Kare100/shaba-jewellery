@@ -35,7 +35,7 @@ API: `GET /api/products` (optional `?category=` and `?featured=1`) and `GET /api
 - **Sitemap:** `/sitemap.xml` is generated from the database, so new products appear automatically, with `<lastmod>` taken from `updated_at`.
 - **robots.txt:** `/robots.txt` points to the sitemap and blocks `/cart`, `/checkout` and `/api/`.
 - **Clean URLs:** `/shop/<category>` and `/products/<slug>`, with no IDs or query strings. Slugs are unique in the database.
-- **Server-side rendering:** product content is in the HTML on first load, so crawlers don't need to run JavaScript. Pages are cached with stale-while-revalidate (`routeRules`).
+- **Server-side rendering:** product content is in the HTML on first load, so crawlers don't need to run JavaScript. API responses are cached at the edge for 10 minutes (`routeRules`). Unknown products and categories return a real 404 page, not a "soft 404".
 - **noindex** on cart, checkout and error pages.
 - **Semantic HTML:** one `h1` per page, breadcrumbs, `lang="en-KE"`, alt text stored per product.
 

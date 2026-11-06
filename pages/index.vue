@@ -69,7 +69,7 @@ useJsonLd({
       </div>
       <div class="hero-copy order-2 flex flex-col justify-end px-6 py-14 sm:px-12 lg:order-1 lg:px-16 lg:pb-24 xl:px-24">
         <p class="label text-gold">The Shaba Gold Edit</p>
-        <h1 id="hero-heading" class="mt-5 max-w-xl text-display-lg">Fine gold jewellery, finished by hand in Nairobi</h1>
+        <h1 id="hero-heading" class="mt-5 max-w-xl text-[clamp(2.5rem,4.6vw,4.5rem)] leading-[1.02]">Fine gold jewellery, finished by hand in Nairobi</h1>
         <p class="mt-6 max-w-md leading-relaxed text-ink-soft">
           Rings, chains, hoops and pearls in 18k gold vermeil, made to be layered, stacked and worn every day.
         </p>

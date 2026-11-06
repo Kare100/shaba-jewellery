@@ -6,7 +6,7 @@ const { data: products } = await useFetch<Product[]>('/api/products', { key: 'al
 usePageSeo({
   title: 'Shop All Jewellery',
   description:
-    'Browse every ring, necklace, earring and bracelet in the Shaba collection. Silver, gold vermeil, copper and beadwork, with delivery across Kenya.',
+    'Browse every ring, necklace, earring and bracelet from Shaba: 18k gold vermeil, white topaz, pink tourmaline and freshwater pearls, finished by hand in Nairobi.',
   path: '/shop',
 })
 useItemListJsonLd(() => products.value ?? [])
@@ -16,6 +16,6 @@ useItemListJsonLd(() => products.value ?? [])
   <ProductListing
     :products="products ?? []"
     heading="All jewellery"
-    intro="Every piece in the collection, from everyday studs to statement beadwork."
+    intro="Every piece in the collection, from everyday huggies to hand-knotted pearls."
   />
 </template>

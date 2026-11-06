@@ -46,10 +46,6 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // Product pages change rarely: cache rendered HTML and revalidate in the background.
-    '/': { swr: 600 },
-    '/shop/**': { swr: 600 },
-    '/products/**': { swr: 600 },
     // Cart and checkout are per-visitor; render them on the client and keep them out of search.
     '/cart': { ssr: false, headers: { 'X-Robots-Tag': 'noindex' } },
     '/checkout': { ssr: false, headers: { 'X-Robots-Tag': 'noindex' } },
