@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-velvet-deep;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-velvet-deep font-sans text-mist antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-display font-normal;
+  }
+  ::selection {
+    @apply bg-champagne text-velvet-deep;
+  }
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-tsavorite;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-8;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium tracking-wide
+      transition duration-300 ease-cinematic disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply btn bg-champagne text-velvet-deep hover:bg-champagne-bright;
+    box-shadow: 0 0 0 1px rgb(240 226 198 / 0.4), 0 12px 40px -12px rgb(216 195 160 / 0.55);
+  }
+  .btn-ghost {
+    @apply btn border border-mist/25 text-mist hover:border-champagne hover:text-champagne;
+  }
+  .input {
+    @apply w-full rounded-lg border border-mist/15 bg-velvet-soft px-4 py-3 text-sm text-mist placeholder:text-mist/35
+      focus:border-champagne focus:outline-none focus:ring-2 focus:ring-champagne/25;
+  }
+  .hairline {
+    @apply border-mist/10;
+  }
+}
+
+@layer utilities {
+  /* Velvet: a soft overhead spotlight falling onto deep green. */
+  .bg-spotlight {
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 38%, rgb(46 92 78 / 0.55), transparent 70%),
+      radial-gradient(ellipse 120% 90% at 50% 110%, rgb(3 10 8 / 0.9), transparent 60%),
+      #0c2620;
+  }
+}
+
+/* Film grain over the whole page, the one texture that makes flat colour read as cinematic. */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Hero opening sequence: the light comes up, the name settles, then the copy arrives. */
+.reveal-light { animation: light-up 2.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.reveal-word { animation: word-settle 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both; }
+.reveal-copy { animation: copy-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 1.3s both; }
+@keyframes light-up { from { opacity: 0; } to { opacity: 1; } }
+@keyframes word-settle {
+  from { opacity: 0; letter-spacing: 0.25em; filter: blur(12px); }
+  to { opacity: 1; letter-spacing: -0.02em; filter: blur(0); }
+}
+@keyframes copy-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .grain::after { animation: none; }
+  .reveal-light, .reveal-word, .reveal-copy { animation: none; }
+}
