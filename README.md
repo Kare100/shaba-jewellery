@@ -92,4 +92,4 @@ server/data/products.json  the catalogue (loaded into Postgres automatically)
 
 ## AI usage
 
-_Write your own 3–5 sentences here before submitting. Say what the AI produced and what you decided, reviewed or changed yourself._
+I used AI as a research and debugging assistant. For asset sourcing, it helped me find royalty-free product and lifestyle photography on Unsplash that matched each product’s name and description. For design research, it helped me shortlist five leading fine-jewellery e-commerce sites as references for layout, typography and UI patterns, which I then reviewed and adapted myself. During development, I used it to help debug issues, for example tracing errors from the stack trace and checking my fixes, while I made the final call on every change.
