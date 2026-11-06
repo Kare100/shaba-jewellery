@@ -23,36 +23,38 @@ const sorted = computed(() => {
 
 <template>
   <div>
-    <!-- Banner photo with the title over it -->
-    <header class="relative h-[52svh] min-h-[380px] overflow-hidden bg-ink text-paper">
-      <NuxtImg
-        :src="banner.src"
-        :alt="banner.alt"
-        width="1920"
-        height="900"
-        fit="crop"
-        sizes="100vw"
-        preload
-        fetchpriority="high"
-        class="hero-photo h-full w-full object-cover"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/40" aria-hidden="true" />
-      <div class="container-page hero-copy absolute inset-x-0 bottom-0 pb-10 sm:pb-14">
-        <nav aria-label="Breadcrumb" class="label text-paper/75">
-          <ol class="flex gap-2">
-            <li><NuxtLink to="/" class="hover:text-paper">Home</NuxtLink> /</li>
-            <li v-if="props.active"><NuxtLink to="/shop" class="hover:text-paper">Shop</NuxtLink> /</li>
-            <li aria-current="page" class="text-paper">{{ props.active ? CATEGORY_INFO[props.active].label : 'Shop all' }}</li>
-          </ol>
-        </nav>
-        <h1 class="mt-4 text-display-lg">{{ props.heading }}</h1>
-        <p class="mt-4 max-w-xl text-paper/85">{{ props.intro }}</p>
+    <!-- Header: title and intro beside a portrait photo of the category being worn -->
+    <header class="bg-stone pt-[96px] sm:pt-[104px]">
+      <div class="container-page grid items-end gap-8 py-10 md:grid-cols-[1fr,minmax(0,360px)] md:py-14">
+        <div class="hero-copy">
+          <nav aria-label="Breadcrumb" class="label text-ink-soft">
+            <ol class="flex gap-2">
+              <li><NuxtLink to="/" class="hover:text-ink">Home</NuxtLink> /</li>
+              <li v-if="props.active"><NuxtLink to="/shop" class="hover:text-ink">Shop</NuxtLink> /</li>
+              <li aria-current="page" class="text-ink">{{ props.active ? CATEGORY_INFO[props.active].label : 'Shop all' }}</li>
+            </ol>
+          </nav>
+          <h1 class="mt-5 text-display-lg">{{ props.heading }}</h1>
+          <p class="mt-4 max-w-lg leading-relaxed text-ink-soft">{{ props.intro }}</p>
+        </div>
+        <div class="hidden aspect-[4/5] overflow-hidden md:block">
+          <NuxtImg
+            :src="banner.src"
+            :alt="banner.alt"
+            width="720"
+            height="900"
+            fit="crop"
+            sizes="360px"
+            preload
+            class="hero-photo h-full w-full object-cover"
+          />
+        </div>
       </div>
     </header>
 
     <div class="container-page">
       <div class="sticky top-[96px] z-30 -mx-4 flex flex-wrap items-center justify-between gap-4 border-b border-ink/10 bg-paper/95 px-4 py-4 backdrop-blur-md sm:top-[104px] sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
-        <ul class="flex gap-6 overflow-x-auto">
+        <ul class="flex gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <li>
             <NuxtLink to="/shop" class="label whitespace-nowrap pb-1" :class="!props.active ? 'border-b border-ink' : 'text-ink-soft hover:text-ink'">All</NuxtLink>
           </li>

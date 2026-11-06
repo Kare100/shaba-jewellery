@@ -14,8 +14,8 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
 })
 onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
-const hasHeroPhoto = computed(() => route.path === '/' || route.path.startsWith('/shop'))
-const overHero = computed(() => hasHeroPhoto.value && !scrolled.value && !menuOpen.value)
+// Sits on the stone hero/header colour until you scroll, then becomes a solid bar.
+const overHero = computed(() => (route.path === '/' || route.path.startsWith('/shop')) && !scrolled.value && !menuOpen.value)
 
 const notes = [
   'Free delivery in Nairobi on orders over Ksh 5,000',
@@ -36,7 +36,7 @@ const notes = [
 
     <header
       class="transition-colors duration-500 ease-cinematic"
-      :class="overHero ? 'bg-transparent text-paper' : 'border-b border-ink/10 bg-paper/95 text-ink backdrop-blur-md'"
+      :class="overHero ? 'border-b border-transparent bg-stone text-ink' : 'border-b border-ink/10 bg-paper/95 text-ink backdrop-blur-md'"
     >
       <div class="container-page grid h-16 grid-cols-[1fr,auto,1fr] items-center sm:h-[72px]">
         <nav aria-label="Main" class="hidden items-center gap-7 lg:flex">

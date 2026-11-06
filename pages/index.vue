@@ -10,7 +10,7 @@ const { data: featured } = await useFetch<Product[]>('/api/products', {
 
 // Slow parallax on the hero photo: it drifts at a third of the scroll speed, like a camera dolly.
 const heroShift = ref(0)
-const onScroll = () => (heroShift.value = Math.min(window.scrollY, window.innerHeight) * 0.3)
+const onScroll = () => (heroShift.value = Math.min(window.scrollY, window.innerHeight) * 0.15)
 onMounted(() => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   window.addEventListener('scroll', onScroll, { passive: true })
@@ -50,29 +50,32 @@ useJsonLd({
 
 <template>
   <div>
-    <!-- Hero: one full-bleed photograph, the way fine-jewellery houses open. -->
-    <section class="relative h-[100svh] min-h-[620px] overflow-hidden bg-ink text-paper" aria-labelledby="hero-heading">
-      <div class="absolute inset-0 will-change-transform" :style="{ transform: `translate3d(0, ${heroShift}px, 0)` }">
-        <NuxtImg
-          :src="PHOTOS.hero.src"
-          :alt="PHOTOS.hero.alt"
-          width="1920"
-          height="1280"
-          fit="crop"
-          sizes="100vw"
-          preload
-          fetchpriority="high"
-          class="hero-photo h-full w-full object-cover object-[50%_30%]"
-        />
+    <!-- Hero: an editorial split, copy on stone beside a full-height portrait photograph. -->
+    <section class="grid bg-stone pt-[96px] sm:pt-[104px] lg:min-h-[100svh] lg:grid-cols-2" aria-labelledby="hero-heading">
+      <div class="relative order-1 aspect-[4/5] overflow-hidden lg:order-2 lg:aspect-auto">
+        <div class="absolute inset-0 will-change-transform" :style="{ transform: `translate3d(0, ${heroShift}px, 0)` }">
+          <NuxtImg
+            :src="PHOTOS.hero.src"
+            :alt="PHOTOS.hero.alt"
+            width="1100"
+            height="1375"
+            fit="crop"
+            sizes="100vw lg:50vw"
+            preload
+            fetchpriority="high"
+            class="hero-photo h-full w-full object-cover object-[50%_35%]"
+          />
+        </div>
       </div>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/30" aria-hidden="true" />
-
-      <div class="container-page hero-copy absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
-        <p class="label text-paper/80">The Shaba Gold Edit</p>
-        <h1 id="hero-heading" class="mt-5 max-w-4xl text-display-lg">Fine gold jewellery, finished by hand in Nairobi</h1>
-        <div class="mt-9 flex flex-wrap gap-3">
-          <NuxtLink to="/shop" class="btn-light">Shop the collection</NuxtLink>
-          <NuxtLink to="/shop/rings" class="btn border border-paper/60 text-paper hover:bg-paper hover:text-ink">Discover rings</NuxtLink>
+      <div class="hero-copy order-2 flex flex-col justify-end px-6 py-14 sm:px-12 lg:order-1 lg:px-16 lg:pb-24 xl:px-24">
+        <p class="label text-gold">The Shaba Gold Edit</p>
+        <h1 id="hero-heading" class="mt-5 max-w-xl text-display-lg">Fine gold jewellery, finished by hand in Nairobi</h1>
+        <p class="mt-6 max-w-md leading-relaxed text-ink-soft">
+          Rings, chains, hoops and pearls in 18k gold vermeil, made to be layered, stacked and worn every day.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-3">
+          <NuxtLink to="/shop" class="btn-primary">Shop the collection</NuxtLink>
+          <NuxtLink to="/shop/rings" class="btn-outline">Discover rings</NuxtLink>
         </div>
       </div>
     </section>
