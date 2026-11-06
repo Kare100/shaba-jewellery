@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Product not found' })
   }
 
-  const rows = (await useDb().query(`SELECT ${PRODUCT_COLUMNS} FROM products WHERE slug = $1`, [slug])) as Product[]
+  const rows = (await (await useDb()).query(`SELECT ${PRODUCT_COLUMNS} FROM products WHERE slug = $1`, [slug])) as Product[]
   const product = rows[0]
   if (!product) {
     throw createError({ statusCode: 404, statusMessage: 'Product not found' })

@@ -25,19 +25,19 @@ usePageSeo({
 </script>
 
 <template>
-  <div class="container-page max-w-2xl pb-10 pt-32 sm:pt-36">
-    <div v-if="orderNumber" class="rounded-[3px] bg-velvet-soft p-10 text-center" role="status">
-      <h1 class="text-display-sm text-mist">Thank you, {{ form.name.split(' ')[0] }}!</h1>
+  <div class="container-page max-w-2xl pb-10 pt-36 sm:pt-44">
+    <div v-if="orderNumber" class="bg-stone p-10 text-center" role="status">
+      <h1 class="text-display-md">Thank you, {{ form.name.split(' ')[0] }}!</h1>
       <p class="mt-3">Order <strong>{{ orderNumber }}</strong> is confirmed. This is a demo, so no payment was taken.</p>
       <NuxtLink to="/shop" class="btn-primary mt-6">Keep shopping</NuxtLink>
     </div>
 
     <template v-else>
-      <h1 class="text-display-sm text-mist">Checkout</h1>
-      <p class="mt-2 text-sm text-mist/50">Demo checkout: no payment is taken and nothing is saved.</p>
+      <h1 class="text-display-md">Checkout</h1>
+      <p class="mt-2 text-sm text-ink-soft">Demo checkout: no payment is taken and nothing is saved.</p>
 
       <p v-if="hydrated && count === 0" class="mt-8">
-        Your cart is empty. <NuxtLink to="/shop" class="underline">Browse the collection</NuxtLink>
+        Your bag is empty. <NuxtLink to="/shop" class="underline">Browse the collection</NuxtLink>
       </p>
 
       <form v-else class="mt-8 space-y-5" @submit.prevent="placeOrder">
@@ -48,7 +48,7 @@ usePageSeo({
         <div>
           <label for="phone" class="text-sm font-medium">Phone (for M-Pesa and delivery)</label>
           <input id="phone" v-model="form.phone" required type="tel" autocomplete="tel" placeholder="0712 345 678" class="input mt-1" :aria-invalid="form.phone !== '' && !phoneValid" />
-          <p v-if="form.phone && !phoneValid" class="mt-1 text-xs text-red-400">Enter a Kenyan mobile number, e.g. 0712 345 678.</p>
+          <p v-if="form.phone && !phoneValid" class="mt-1 text-xs text-red-700">Enter a Kenyan mobile number, e.g. 0712 345 678.</p>
         </div>
         <div>
           <label for="area" class="text-sm font-medium">Delivery area</label>
@@ -61,7 +61,7 @@ usePageSeo({
             <label class="flex items-center gap-2"><input v-model="form.payment" type="radio" value="card" /> Card</label>
           </div>
         </fieldset>
-        <div class="flex items-center justify-between rounded-[3px] bg-velvet-soft p-5">
+        <div class="flex items-center justify-between bg-stone p-5">
           <span>{{ count }} items</span>
           <span class="text-lg font-semibold">{{ formatKes(subtotal) }}</span>
         </div>

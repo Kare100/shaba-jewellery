@@ -2,76 +2,84 @@
 import { CATEGORIES, CATEGORY_INFO } from '~~/shared/types'
 
 const { count, hydrated } = useCart()
-const menuOpen = ref(false)
 const route = useRoute()
+const menuOpen = ref(false)
 watch(() => route.fullPath, () => (menuOpen.value = false))
 
-// Fully transparent over the hero; picks up a glass background once you scroll.
+// On the home page the header floats over the hero photo in white, and turns solid once you scroll.
 const scrolled = ref(false)
-const onScroll = () => (scrolled.value = window.scrollY > 24)
+const onScroll = () => (scrolled.value = window.scrollY > 40)
 onMounted(() => {
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
 })
 onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
+const hasHeroPhoto = computed(() => route.path === '/' || route.path.startsWith('/shop'))
+const overHero = computed(() => hasHeroPhoto.value && !scrolled.value && !menuOpen.value)
+
+const notes = [
+  'Free delivery in Nairobi on orders over Ksh 5,000',
+  'Free engraving on every ID bracelet and signet',
+  'Pay with M-Pesa or card',
+  'Returns within 14 days',
+]
 </script>
 
 <template>
-  <header
-    class="fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-cinematic"
-    :class="scrolled || menuOpen ? 'border-b border-mist/10 bg-velvet-deep/75 backdrop-blur-xl' : 'border-b border-transparent'"
-  >
-    <div class="container-page flex h-16 items-center justify-between gap-6 sm:h-20">
-      <NuxtLink to="/" class="font-display text-3xl text-champagne" aria-label="Shaba Jewellery, home">Shaba</NuxtLink>
+  <div class="fixed inset-x-0 top-0 z-50">
+    <!-- Announcement bar: the store's promises, on a slow loop. -->
+    <div class="overflow-hidden bg-ink py-2 text-paper" aria-label="Store information">
+      <div class="marquee flex w-max gap-16 whitespace-nowrap text-[11px] tracking-[0.12em]">
+        <span v-for="(n, i) in [...notes, ...notes]" :key="i" :aria-hidden="i >= notes.length">{{ n }}</span>
+      </div>
+    </div>
 
-      <nav aria-label="Main" class="hidden items-center gap-8 text-sm text-mist/75 md:flex">
-        <NuxtLink to="/shop" class="transition hover:text-champagne" exact-active-class="text-champagne">Everything</NuxtLink>
-        <NuxtLink
-          v-for="c in CATEGORIES"
-          :key="c"
-          :to="`/shop/${c}`"
-          class="transition hover:text-champagne"
-          active-class="text-champagne"
-        >
-          {{ CATEGORY_INFO[c].label }}
-        </NuxtLink>
-      </nav>
-
-      <div class="flex items-center gap-1">
-        <NuxtLink to="/cart" class="relative flex items-center gap-2 rounded-full px-3 py-2 text-sm text-mist/80 transition hover:text-champagne" aria-label="Cart">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-            <path d="M6 7h12l-1 13H7L6 7Z" /><path d="M9 7a3 3 0 0 1 6 0" />
-          </svg>
-          <span class="hidden sm:inline">Cart</span>
-          <span
-            v-if="hydrated && count > 0"
-            class="grid h-5 min-w-5 place-items-center rounded-full bg-champagne px-1 text-[11px] font-semibold text-velvet-deep"
-          >
-            {{ count }}
-          </span>
-        </NuxtLink>
+    <header
+      class="transition-colors duration-500 ease-cinematic"
+      :class="overHero ? 'bg-transparent text-paper' : 'border-b border-ink/10 bg-paper/95 text-ink backdrop-blur-md'"
+    >
+      <div class="container-page grid h-16 grid-cols-[1fr,auto,1fr] items-center sm:h-[72px]">
+        <nav aria-label="Main" class="hidden items-center gap-7 lg:flex">
+          <NuxtLink v-for="c in CATEGORIES" :key="c" :to="`/shop/${c}`" class="label opacity-90 transition hover:opacity-100 hover:text-gold" active-class="text-gold">
+            {{ CATEGORY_INFO[c].label }}
+          </NuxtLink>
+          <NuxtLink to="/shop" class="label opacity-90 transition hover:text-gold" exact-active-class="text-gold">Shop all</NuxtLink>
+        </nav>
         <button
-          class="rounded-full p-2 text-mist md:hidden"
+          class="-ml-2 p-2 lg:hidden"
           :aria-expanded="menuOpen"
           aria-controls="mobile-nav"
           :aria-label="menuOpen ? 'Close menu' : 'Open menu'"
           @click="menuOpen = !menuOpen"
         >
-          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-            <path v-if="!menuOpen" d="M4 8h16M4 16h16" />
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path v-if="!menuOpen" d="M3 8h18M3 16h18" />
             <path v-else d="M6 6l12 12M18 6 6 18" />
           </svg>
         </button>
-      </div>
-    </div>
 
-    <nav v-show="menuOpen" id="mobile-nav" aria-label="Mobile" class="md:hidden">
-      <div class="container-page flex flex-col pb-6 pt-2">
-        <NuxtLink to="/shop" class="py-3 font-display text-3xl">Everything</NuxtLink>
-        <NuxtLink v-for="c in CATEGORIES" :key="c" :to="`/shop/${c}`" class="py-3 font-display text-3xl">
-          {{ CATEGORY_INFO[c].label }}
-        </NuxtLink>
+        <NuxtLink to="/" class="font-display text-[26px] tracking-[0.32em] sm:text-[30px]" aria-label="Shaba Jewellery, home">SHABA</NuxtLink>
+
+        <div class="flex justify-end">
+          <NuxtLink to="/cart" class="label flex items-center gap-2 py-2 transition hover:text-gold">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+              <path d="M5 8h14l-1 12H6L5 8Z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" />
+            </svg>
+            <span class="hidden sm:inline">Bag</span>
+            <span class="tabular-nums">({{ hydrated ? count : 0 }})</span>
+            <span class="sr-only">items in your bag</span>
+          </NuxtLink>
+        </div>
       </div>
-    </nav>
-  </header>
+
+      <nav v-show="menuOpen" id="mobile-nav" aria-label="Mobile" class="border-t border-ink/10 bg-paper text-ink lg:hidden">
+        <div class="container-page flex flex-col py-4">
+          <NuxtLink v-for="c in CATEGORIES" :key="c" :to="`/shop/${c}`" class="border-b border-ink/10 py-4 font-display text-2xl">
+            {{ CATEGORY_INFO[c].label }}
+          </NuxtLink>
+          <NuxtLink to="/shop" class="py-4 font-display text-2xl">Shop all</NuxtLink>
+        </div>
+      </nav>
+    </header>
+  </div>
 </template>

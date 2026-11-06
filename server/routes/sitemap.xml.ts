@@ -3,7 +3,7 @@ import { CATEGORIES } from '../../shared/types'
 // GET /sitemap.xml, built from the database so new products appear automatically.
 export default defineEventHandler(async (event) => {
   const { siteUrl } = useRuntimeConfig().public
-  const products = (await useDb().query(
+  const products = (await (await useDb()).query(
     'SELECT slug, updated_at AS "updatedAt" FROM products ORDER BY id',
   )) as { slug: string; updatedAt: string }[]
 

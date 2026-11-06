@@ -15,30 +15,30 @@ usePageSeo({
 </script>
 
 <template>
-  <div class="container-page pb-10 pt-32 sm:pt-36">
-    <h1 class="text-display-sm text-mist">Your cart</h1>
+  <div class="container-page pb-10 pt-36 sm:pt-44">
+    <h1 class="text-display-md">Your bag</h1>
 
-    <p v-if="!hydrated" class="mt-8 text-mist/50">Loading your cart…</p>
+    <p v-if="!hydrated" class="mt-8 text-ink-soft">Loading your cart…</p>
 
-    <div v-else-if="count === 0" class="mt-8 rounded-[3px] bg-velvet-soft p-10 text-center">
-      <p class="text-lg">Your cart is empty.</p>
+    <div v-else-if="count === 0" class="mt-8 bg-stone p-10 text-center">
+      <p class="text-lg">Your bag is empty.</p>
       <NuxtLink to="/shop" class="btn-primary mt-6">Browse the collection</NuxtLink>
     </div>
 
     <div v-else class="mt-8 grid gap-10 lg:grid-cols-[1fr,360px]">
-      <ul class="divide-y divide-mist/10 border-y border-mist/10">
+      <ul class="divide-y divide-ink/10 border-y border-ink/10">
         <li v-for="item in items" :key="item.slug" class="flex gap-4 py-5">
           <NuxtLink :to="`/products/${item.slug}`" class="shrink-0">
-            <NuxtImg :src="item.image" :alt="item.imageAlt" width="112" height="112" class="h-24 w-24 rounded-[3px] bg-velvet-soft object-cover sm:h-28 sm:w-28" />
+            <NuxtImg :src="item.image" :alt="item.imageAlt" width="112" height="112" class="h-24 w-24 bg-stone object-cover sm:h-28 sm:w-28" />
           </NuxtLink>
           <div class="flex flex-1 flex-col">
             <div class="flex justify-between gap-4">
-              <NuxtLink :to="`/products/${item.slug}`" class="font-display text-xl hover:text-champagne">{{ item.name }}</NuxtLink>
+              <NuxtLink :to="`/products/${item.slug}`" class="font-display text-xl hover:text-gold">{{ item.name }}</NuxtLink>
               <p class="font-medium">{{ formatKes(item.priceKes * item.qty) }}</p>
             </div>
-            <p class="text-sm text-mist/50">{{ formatKes(item.priceKes) }} each</p>
+            <p class="text-sm text-ink-soft">{{ formatKes(item.priceKes) }} each</p>
             <div class="mt-auto flex items-center gap-4 pt-3">
-              <div class="flex items-center rounded-full border border-mist/20 text-sm">
+              <div class="flex items-center rounded-full border border-ink/20 text-sm">
                 <button class="px-3 py-1.5" :aria-label="`Decrease quantity of ${item.name}`" @click="setQty(item.slug, item.qty - 1)">−</button>
                 <span class="w-8 text-center" aria-live="polite">{{ item.qty }}</span>
                 <button
@@ -48,23 +48,23 @@ usePageSeo({
                   @click="setQty(item.slug, item.qty + 1)"
                 >+</button>
               </div>
-              <button class="text-sm text-mist/50 underline hover:text-red-400" @click="remove(item.slug)">Remove</button>
+              <button class="text-sm text-ink-soft underline hover:text-red-700" @click="remove(item.slug)">Remove</button>
             </div>
           </div>
         </li>
       </ul>
 
-      <aside class="h-fit rounded-[3px] bg-velvet-soft p-6" aria-label="Order summary">
-        <h2 class="text-3xl">Summary</h2>
+      <aside class="h-fit bg-stone p-6" aria-label="Order summary">
+        <h2 class="text-2xl">Summary</h2>
         <dl class="mt-4 space-y-2 text-sm">
           <div class="flex justify-between"><dt>Subtotal ({{ count }} items)</dt><dd>{{ formatKes(subtotal) }}</dd></div>
           <div class="flex justify-between"><dt>Delivery (Nairobi)</dt><dd>{{ delivery === 0 ? 'Free' : formatKes(delivery) }}</dd></div>
-          <div class="flex justify-between border-t border-mist/10 pt-3 text-base font-semibold"><dt>Total</dt><dd>{{ formatKes(total) }}</dd></div>
+          <div class="flex justify-between border-t border-ink/10 pt-3 text-base font-semibold"><dt>Total</dt><dd>{{ formatKes(total) }}</dd></div>
         </dl>
-        <p v-if="delivery > 0" class="mt-3 text-xs text-mist/50">
+        <p v-if="delivery > 0" class="mt-3 text-xs text-ink-soft">
           Add {{ formatKes(FREE_DELIVERY_FROM - subtotal) }} more for free delivery.
         </p>
-        <NuxtLink to="/checkout" class="btn-primary mt-6 w-full">Checkout</NuxtLink>
+        <NuxtLink to="/checkout" class="btn-primary mt-6 w-full">Continue to checkout</NuxtLink>
       </aside>
     </div>
   </div>

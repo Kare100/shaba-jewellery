@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Values go in as $1/$2 parameters, never pasted into the SQL text, so this is safe from injection.
-  const rows = await useDb().query(
+  const rows = await (await useDb()).query(
     `SELECT ${PRODUCT_COLUMNS}
      FROM products
      WHERE ($1::text IS NULL OR category = $1)

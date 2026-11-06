@@ -1,0 +1,86 @@
+[
+  {
+    "slug": "amani-solitaire-ring", "sku": "SHB-RG-001", "name": "Amani Solitaire Ring", "category": "rings",
+    "short_description": "An emerald-cut white topaz on a pavé band in 18k gold vermeil. Our most-loved engagement-style ring.",
+    "description": "Amani (peace) sets a 7 x 5 mm emerald-cut white topaz in a four-claw basket, on a slim band lined with hand-set pavé stones. It is cast in sterling silver and finished with a thick layer of 18k gold, so it keeps its colour with everyday wear. Sizes J to S.",
+    "material": "18k gold vermeil, white topaz", "price_kes": 12500, "stock": 9,
+    "image": "/photo-1598560917807-1bae44bd2be8", "image_alt": "Gold solitaire ring with an emerald-cut stone and pavé band", "featured": true
+  },
+  {
+    "slug": "waridi-halo-ring", "sku": "SHB-RG-002", "name": "Waridi Halo Ring", "category": "rings",
+    "short_description": "A cushion-cut pink tourmaline framed by a halo of white stones, on a rose gold vermeil band.",
+    "description": "Waridi (rose) centres an 8 mm cushion-cut pink tourmaline in a halo of small white sapphires, with more stones running down the shoulders. The band is sterling silver plated in 18k rose gold. Every tourmaline is a slightly different shade of pink.",
+    "material": "18k rose gold vermeil, pink tourmaline, white sapphire", "price_kes": 14800, "stock": 5,
+    "image": "/photo-1603561596973-8166e9e089d1", "image_alt": "Rose gold ring with a pink cushion-cut stone and a halo of small diamonds", "featured": true
+  },
+  {
+    "slug": "simba-signet-ring", "sku": "SHB-RG-003", "name": "Simba Signet Ring", "category": "rings",
+    "short_description": "A heavy gold signet with a hand-engraved crest. Made to be worn every day and passed on.",
+    "description": "The Simba signet has a 14 mm round face with a crest engraved by hand at our bench, and a band that tapers for comfort. It is cast in solid brass and plated in 18k gold. Ask us about engraving your own initials instead.",
+    "material": "18k gold-plated solid brass", "price_kes": 9900, "stock": 12,
+    "image": "/photo-1705326455036-0fab8ecba04d", "image_alt": "Chunky gold signet ring with an engraved round face", "featured": false
+  },
+  {
+    "slug": "jua-pendant-necklace", "sku": "SHB-NK-001", "name": "Jua Halo Pendant", "category": "necklaces",
+    "short_description": "An open gold oval on a fine 45 cm chain. Light enough to wear alone or layer.",
+    "description": "Jua (sun) is a 20 mm open oval with a soft polished finish, hung on a 45 cm snake chain with a 5 cm extender. It sits just below the collarbone and layers well with shorter chains.",
+    "material": "18k gold vermeil", "price_kes": 6800, "stock": 18,
+    "image": "/photo-1783541507490-edb026e2a961", "image_alt": "Gold necklace with an open oval pendant on a sandy textured surface", "featured": true
+  },
+  {
+    "slug": "bahari-pearl-necklace", "sku": "SHB-NK-002", "name": "Bahari Pearl Strand", "category": "necklaces",
+    "short_description": "Freshwater pearls hand-knotted on silk. A classic strand for weddings and every day after.",
+    "description": "Bahari (ocean) uses 7 to 8 mm freshwater pearls, each knotted by hand on silk so they never rub against each other. Length is 42 cm with a gold vermeil clasp. Each pearl is slightly different, which is how you know they are real.",
+    "material": "Freshwater pearls, silk, 18k gold vermeil clasp", "price_kes": 11500, "stock": 7,
+    "image": "/photo-1654699991520-aaaf4dd2608b", "image_alt": "Strand of white freshwater pearls", "featured": true
+  },
+  {
+    "slug": "mnyororo-chain-necklace", "sku": "SHB-NK-003", "name": "Mnyororo Rope Chain", "category": "necklaces",
+    "short_description": "A chunky twisted rope chain in gold vermeil that catches the light from every angle.",
+    "description": "Mnyororo (chain) is a 4 mm twisted rope chain with a lobster clasp, in 45 cm or 50 cm. Wear it alone as a statement or add a pendant.",
+    "material": "18k gold vermeil", "price_kes": 7400, "stock": 14,
+    "image": "/photo-1611107683227-e9060eccd846", "image_alt": "Gold twisted rope chains piled on a white surface", "featured": false
+  },
+  {
+    "slug": "shaba-bold-hoops", "sku": "SHB-ER-001", "name": "Shaba Bold Hoops", "category": "earrings",
+    "short_description": "Chunky, hollow gold hoops that look heavy but weigh almost nothing. Our signature earring.",
+    "description": "Our signature hoops are 25 mm across and 6 mm thick, made hollow so they are light enough to wear all day. They close with a hinged click-top and come in a gift box.",
+    "material": "18k gold vermeil", "price_kes": 5600, "stock": 26,
+    "image": "/photo-1708220040824-b273dd0a17cc", "image_alt": "Pair of chunky gold hoop earrings on a white stand", "featured": true
+  },
+  {
+    "slug": "lulu-huggie-earrings", "sku": "SHB-ER-002", "name": "Lulu Huggie Earrings", "category": "earrings",
+    "short_description": "Small, sleek huggie hoops that sit close to the lobe. Easy to sleep and shower in.",
+    "description": "Lulu huggies are 12 mm across with a smooth, rounded profile and a hinged closure. Made from sterling silver with a thick 18k gold layer, they are hypoallergenic and nickel free.",
+    "material": "18k gold vermeil", "price_kes": 3900, "stock": 30,
+    "image": "/photo-1632525230528-ec17c49bc168", "image_alt": "Small gold huggie hoop earring on a white surface", "featured": false
+  },
+  {
+    "slug": "nyota-drop-earrings", "sku": "SHB-ER-003", "name": "Nyota Filigree Drops", "category": "earrings",
+    "short_description": "Rose gold filigree spheres on fine hooks, inspired by the carved doors of Lamu.",
+    "description": "Nyota (star) drops are 12 mm spheres of hand-twisted filigree wire on French hooks, inspired by the patterns carved into old Swahili doors on Lamu. They move as you do and weigh under 2 g each.",
+    "material": "18k rose gold vermeil", "price_kes": 4600, "stock": 11,
+    "image": "/photo-1701777892740-88419a701472", "image_alt": "Pair of rose gold filigree drop earrings on white cloth", "featured": false
+  },
+  {
+    "slug": "jina-id-bracelet", "sku": "SHB-BR-001", "name": "Jina ID Bracelet", "category": "bracelets",
+    "short_description": "A fine gold chain with a curved ID bar, ready to engrave with a name or a date.",
+    "description": "Jina (name) has a 25 mm curved bar on a fine cable chain, 16 cm with a 3 cm extender. We engrave up to 12 characters by hand at no extra cost; add your text at checkout.",
+    "material": "18k gold vermeil", "price_kes": 5200, "stock": 16,
+    "image": "/photo-1777999802051-f6f0296e76af", "image_alt": "Delicate gold bracelet with a curved ID tag", "featured": false
+  },
+  {
+    "slug": "kito-charm-bracelet", "sku": "SHB-BR-002", "name": "Kito Charm Bracelet", "category": "bracelets",
+    "short_description": "A whisper-fine chain scattered with tiny gold charms. Stack two or three together.",
+    "description": "Kito (gem) is a 1 mm chain set with small star, moon and bead charms that catch the light. It is 17 cm long with an extender, and stacks well with the Jina ID Bracelet.",
+    "material": "18k gold vermeil", "price_kes": 4400, "stock": 20,
+    "image": "/photo-1778000000743-87e855360c51", "image_alt": "Three delicate gold charm bracelets on a white background", "featured": false
+  },
+  {
+    "slug": "pwani-link-bracelet", "sku": "SHB-BR-003", "name": "Pwani Link Bracelet", "category": "bracelets",
+    "short_description": "Bold oval links in polished gold vermeil, with a toggle clasp that is easy to close one-handed.",
+    "description": "Pwani (coast) is made of 10 mm oval links joined by hand and finished with a polished toggle clasp. It is 18 cm long and sits loosely on the wrist.",
+    "material": "18k gold vermeil", "price_kes": 6900, "stock": 8,
+    "image": "/photo-1633810543462-77c4a3b13f07", "image_alt": "Gold oval link bracelet worn on a wrist", "featured": true
+  }
+]

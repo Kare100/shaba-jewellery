@@ -1,5 +1,6 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { CATEGORY_INFO, type Product } from '~~/shared/types'
+import { photoUrl } from '~~/shared/photos'
 
 /** schema.org Product + Offer, which is what makes price and stock eligible for Google rich results. */
 export function useProductJsonLd(product: MaybeRefOrGetter<Product | null | undefined>) {
@@ -17,7 +18,7 @@ export function useProductJsonLd(product: MaybeRefOrGetter<Product | null | unde
           name: p.name,
           description: p.description,
           sku: p.sku,
-          image: [`${siteUrl}${p.image}`],
+          image: [photoUrl(p.image, 1200, 1200)],
           material: p.material,
           category: CATEGORY_INFO[p.category].label,
           brand: { '@type': 'Brand', name: siteName },

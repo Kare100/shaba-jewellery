@@ -3,15 +3,15 @@
 A small online store for a fictional Nairobi jewellery shop, built as a take-home project.
 
 - **Live site:** _add your Vercel URL here_
-- **Stack:** Nuxt 3 (TypeScript), Tailwind CSS, `@nuxt/image`, Three.js, Nuxt server routes (Nitro), PostgreSQL on Neon, deployed on Vercel
+- **Stack:** Nuxt 3 (TypeScript), Tailwind CSS, `@nuxt/image`, Nuxt server routes (Nitro), PostgreSQL on Neon, deployed on Vercel
 
 ## Design
 
-The look is the inside of a jewellery box: deep green velvet (after tsavorite, the green garnet first found in Tsavo), champagne metal for anything you can click, a thin Didone display face (Italiana) with Hanken Grotesk for text, and a light film grain over everything.
+The design follows how leading fine-jewellery shops (Mejuri, Monica Vinader, Catbird) present their pieces: real photography edge to edge, soft paper and stone backgrounds that photograph gold warmly, near-black type, small tracked labels, and a muted gold used only for accents. Gilda Display is used for headings and Jost for text.
 
-- **Live 3D jewellery (Three.js).** The home page opens on a gold tsavorite ring turning under a spotlight in front of the shop's name. It follows the pointer and turns and lifts as you scroll. Every product page has a 3D model you can drag to turn. The models are built in code from simple shapes (`lib/jewel-scene.ts`, configured per product in `shared/jewels.ts`), so there are no model files to download. They use physically based metal, transmissive gemstones with dispersion, and iridescent pearls, lit by an environment map.
-- **Performance first.** Three.js loads in its own chunk only after the page has rendered, inside client-only components. Product pages render the photo in the server HTML (good for SEO and LCP), and the 3D model fades in over it. If WebGL isn't available, the photo stays. Rendering pauses when the canvas is off screen.
-- **Motion with restraint.** There's one opening sequence on the home page (the light comes up, the name settles, the copy arrives). Product tiles tilt toward the pointer with a glare that follows it. `prefers-reduced-motion` turns off the grain, the opening sequence, auto-rotation and tilt.
+- **Real photography.** Product and lifestyle photos come from [Unsplash](https://unsplash.com) (free for commercial use under the Unsplash License). The photo for each product is chosen to match its name and description.
+- **Cinematic, not gimmicky.** The home page opens on a full-bleed photo that settles from a slow push-in, with a gentle parallax as you scroll. The editorial image opens like a curtain the first time it comes into view. Product photos zoom like a loupe under the mouse. Product tiles reveal a "Quick add" button on hover. `prefers-reduced-motion` turns all of this off.
+- **Familiar shop patterns.** Announcement ticker, centred wordmark, transparent header over photos that turns solid on scroll, category banners, a sticky filter and sort bar, a product gallery with thumbnails, and accordions for details, care and delivery.
 
 ## Features
 
@@ -41,12 +41,11 @@ API: `GET /api/products` (optional `?category=` and `?featured=1`) and `GET /api
 
 ## Image handling
 
-- Every image goes through `<NuxtImg>`. On Vercel, this uses Vercel's image optimiser to serve AVIF/WebP at the size each screen needs (`sizes`, `srcset`).
+- Every image goes through `<NuxtImg>` with the Unsplash provider. It asks Unsplash's image CDN for each photo at exactly the width the layout needs, in WebP, with a `srcset` for each screen size. A full-size photo is never downloaded.
 - Width and height are always set, so the layout doesn't jump while images load (CLS).
 - The main product image is preloaded with `fetchpriority="high"` because it is the Largest Contentful Paint (LCP) element. Images below the fold use `loading="lazy"`.
-- Source files are small WebP images (about 6–45 KB each).
+- The browser connects to the image CDN early (`preconnect`).
 
-> The product photos are generated illustrations, used as placeholders because the shop is fictional. To use real photos, replace the files in `public/images/products/` and keep the same names.
 
 ## Run locally
 
@@ -55,32 +54,31 @@ Requirements: Node 20.6+ and a free [Neon](https://neon.tech) Postgres database.
 ```bash
 npm install
 cp .env.example .env        # then set NUXT_DATABASE_URL
-npm run db:setup            # creates the table and loads 12 demo products
 npm run dev                 # http://localhost:3000
+
+The database sets itself up: on the first request, the server creates the tables and loads the catalogue from `server/data/products.json`.
 ```
 
 ## Deploy (Vercel + Neon)
 
 1. Import the GitHub repo into Vercel. It detects Nuxt automatically.
 2. In the Vercel project, go to **Storage** and add a **Neon** database. This sets `DATABASE_URL` for you. (Or set `NUXT_DATABASE_URL` yourself.)
-3. Load the data: run `npm run db:setup` against that database, or paste `db/schema.sql` and then `db/seed.sql` into Neon's SQL editor.
-4. Set `NUXT_PUBLIC_SITE_URL` to the site's URL, e.g. `https://shaba-jewellery.vercel.app` (no trailing slash).
-5. Deploy, then check `/sitemap.xml` and run a product URL through Google's [Rich Results Test](https://search.google.com/test/rich-results).
+3. Set `NUXT_PUBLIC_SITE_URL` to the site's URL, e.g. `https://shaba-jewellery.vercel.app` (no trailing slash).
+4. Deploy, then check `/sitemap.xml` and run a product URL through Google's [Rich Results Test](https://search.google.com/test/rich-results).
 
 ## Project structure
 
 ```
 pages/            index, shop/index, shop/[category], products/[slug], cart, checkout
-components/       AppHeader, AppFooter, ProductCard (tilt), ProductListing, JewelCanvas.client (3D)
-lib/jewel-scene.ts  Three.js scene: procedural models, materials, lighting, controls
+components/       AppHeader, AppFooter, ProductCard, ProductListing
 composables/      useCart (cart state), usePageSeo + useJsonLd, useStructuredData
 plugins/          cart.client.ts (saves the cart to localStorage)
 server/api/       products list + product by slug
 server/routes/    sitemap.xml, robots.txt
 server/utils/db.ts  shared Postgres client
 shared/types.ts   Product type and categories (used by both client and server)
-shared/jewels.ts  which 3D model, metal and stone each product uses
-db/               schema.sql, seed.sql
+shared/photos.ts  hero, editorial and category photos
+server/data/products.json  the catalogue (loaded into Postgres automatically)
 ```
 
 ## Key decisions
@@ -89,8 +87,8 @@ db/               schema.sql, seed.sql
 - **PostgreSQL with raw SQL through Neon's HTTP driver, no ORM.** With one table, an ORM adds more setup than it saves. The HTTP driver sends each query as one HTTPS request, so serverless functions never run out of database connections. Every query is parameterised. `price_kes` is stored as an integer because floats shouldn't be used for money.
 - **Cart in `useState` + `localStorage`, not in the database.** This keeps checkout mockable with no accounts or sessions. Cart and checkout are client-rendered and set to noindex because they're different for every visitor.
 - **SEO lives in composables**, so every page gets the full set of meta tags, canonical URL and JSON-LD from one place.
-- **A small Tailwind theme** (`velvet`, `champagne`, `tsavorite`, `mist`, plus a display type scale) and a few shared classes (`.btn-primary`, `.btn-ghost`, `.input`, `.container-page`) keep styling consistent.
-- **Procedural 3D instead of downloaded models.** Twelve glTF models would weigh megabytes and need a 3D artist. Building each piece from tori, lathes and instanced spheres keeps the whole 3D layer to the Three.js chunk plus a few KB of code.
+- **A small Tailwind theme** (`paper`, `stone`, `ink`, `gold`, plus a display type scale) and a few shared classes (`.btn-primary`, `.btn-outline`, `.label`, `.link-underline`, `.input`, `.container-page`) keep styling consistent.
+- **A database that sets itself up.** On first use, each server instance checks a fingerprint of `products.json` against the database (one query). If the fingerprint is missing or has changed, the server creates the tables and upserts the products. A fresh deploy can never show empty pages, and there's no manual seeding step.
 
 ## AI usage
 

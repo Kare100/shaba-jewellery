@@ -1,11 +1,12 @@
 import type { MaybeRefOrGetter } from 'vue'
+import { PHOTOS, photoUrl } from '~~/shared/photos'
 
 interface PageSeo {
   title: string
   description: string
   /** Path only, e.g. "/products/amani-solitaire-ring" */
   path: string
-  /** Path under /public or absolute URL */
+  /** Unsplash photo path or absolute URL */
   image?: string
   imageAlt?: string
   noindex?: boolean
@@ -18,8 +19,8 @@ export function usePageSeo(seo: MaybeRefOrGetter<PageSeo>) {
   const s = computed(() => toValue(seo))
   const url = computed(() => `${siteUrl}${s.value.path === '/' ? '' : s.value.path}`)
   const image = computed(() => {
-    const img = s.value.image ?? '/images/og-default.jpg'
-    return img.startsWith('http') ? img : `${siteUrl}${img}`
+    // Product photos are Unsplash paths; turn them into a 1200x630 crop for social cards.
+    return photoUrl(s.value.image ?? PHOTOS.hero.src)
   })
   const fullTitle = computed(() => `${s.value.title} | ${siteName}`)
 

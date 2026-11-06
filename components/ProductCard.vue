@@ -7,65 +7,44 @@ const props = defineProps<{
   eager?: boolean
 }>()
 
-// The tile tips toward the pointer like a piece turned under a lamp, with a glare that follows.
-// Only reacts to a real mouse or pen, and not at all with reduced motion.
-const tile = ref<HTMLElement>()
-function onMove(e: PointerEvent) {
-  if (e.pointerType === 'touch' || !tile.value) return
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  const r = tile.value.getBoundingClientRect()
-  const x = (e.clientX - r.left) / r.width
-  const y = (e.clientY - r.top) / r.height
-  tile.value.style.setProperty('--rx', `${(0.5 - y) * 10}deg`)
-  tile.value.style.setProperty('--ry', `${(x - 0.5) * 12}deg`)
-  tile.value.style.setProperty('--gx', `${x * 100}%`)
-  tile.value.style.setProperty('--gy', `${y * 100}%`)
-}
-function onLeave() {
-  tile.value?.style.setProperty('--rx', '0deg')
-  tile.value?.style.setProperty('--ry', '0deg')
+const cart = useCart()
+const added = ref(false)
+function quickAdd() {
+  cart.add(props.product, 1)
+  added.value = true
+  setTimeout(() => (added.value = false), 1800)
 }
 </script>
 
 <template>
-  <article class="group [perspective:900px]">
-    <NuxtLink :to="`/products/${props.product.slug}`" class="block">
-      <div
-        ref="tile"
-        class="tilt relative aspect-[4/5] overflow-hidden rounded-[3px] bg-velvet-soft shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]"
-        @pointermove="onMove"
-        @pointerleave="onLeave"
-      >
+  <article class="group relative">
+    <div class="relative aspect-[4/5] overflow-hidden bg-stone">
+      <NuxtLink :to="`/products/${props.product.slug}`" class="block h-full" :aria-label="props.product.name" tabindex="-1">
         <NuxtImg
           :src="props.product.image"
           :alt="props.product.imageAlt"
-          width="600"
-          height="750"
-          fit="cover"
-          sizes="50vw md:33vw lg:320px"
+          width="640"
+          height="800"
+          fit="crop"
+          sizes="50vw md:33vw xl:440px"
           :loading="props.eager ? 'eager' : 'lazy'"
-          class="h-full w-full scale-[1.02] object-cover transition-transform duration-700 ease-cinematic group-hover:scale-[1.08]"
+          class="h-full w-full object-cover transition-transform duration-[1400ms] ease-cinematic group-hover:scale-[1.06]"
         />
-        <span class="glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
-      </div>
-      <div class="mt-4 flex items-baseline justify-between gap-3">
-        <h3 class="font-display text-2xl leading-tight text-mist transition group-hover:text-champagne">{{ props.product.name }}</h3>
-        <p class="shrink-0 text-sm text-champagne">{{ formatKes(props.product.priceKes) }}</p>
-      </div>
-      <p class="mt-1 text-sm text-mist/50">{{ props.product.material }}</p>
+      </NuxtLink>
+      <button
+        v-if="props.product.stock > 0"
+        type="button"
+        class="label absolute inset-x-3 bottom-3 translate-y-2 bg-paper/95 py-3 text-center opacity-0 backdrop-blur transition duration-500 ease-cinematic hover:bg-ink hover:text-paper focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+        :aria-label="`Add ${props.product.name} to bag`"
+        @click="quickAdd"
+      >
+        {{ added ? 'Added to bag' : 'Quick add' }}
+      </button>
+    </div>
+    <NuxtLink :to="`/products/${props.product.slug}`" class="mt-4 block">
+      <h3 class="font-display text-lg leading-snug sm:text-xl">{{ props.product.name }}</h3>
+      <p class="mt-1 text-sm text-ink-soft">{{ props.product.material }}</p>
+      <p class="mt-2 text-sm">{{ formatKes(props.product.priceKes) }}</p>
     </NuxtLink>
   </article>
 </template>
-
-<style scoped>
-.tilt {
-  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-.glare {
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgb(240 226 198 / 0.22), transparent 55%);
-  mix-blend-mode: screen;
-}
-</style>

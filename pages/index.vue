@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { CATEGORIES, CATEGORY_INFO, type Category, type Product } from '~~/shared/types'
-import { HERO_JEWEL } from '~~/shared/jewels'
+import { CATEGORIES, CATEGORY_INFO, type Product } from '~~/shared/types'
+import { CATEGORY_PHOTOS, PHOTOS } from '~~/shared/photos'
 
 const { siteUrl, siteName } = useRuntimeConfig().public
 const { data: featured } = await useFetch<Product[]>('/api/products', {
@@ -8,18 +8,36 @@ const { data: featured } = await useFetch<Product[]>('/api/products', {
   key: 'featured-products',
 })
 
-const CATEGORY_IMAGE: Record<Category, string> = {
-  rings: 'amani-solitaire-ring',
-  necklaces: 'maasai-bead-collar',
-  earrings: 'nyota-drop-earrings',
-  bracelets: 'kito-tennis-bracelet',
-}
+// Slow parallax on the hero photo: it drifts at a third of the scroll speed, like a camera dolly.
+const heroShift = ref(0)
+const onScroll = () => (heroShift.value = Math.min(window.scrollY, window.innerHeight) * 0.3)
+onMounted(() => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
+
+// The editorial image opens like a curtain the first time it scrolls into view.
+const editorial = ref<HTMLElement>()
+const editorialShown = ref(false)
+onMounted(() => {
+  if (!editorial.value) return
+  const io = new IntersectionObserver(([e]) => {
+    if (e?.isIntersecting) {
+      editorialShown.value = true
+      io.disconnect()
+    }
+  }, { threshold: 0.25 })
+  io.observe(editorial.value)
+})
 
 usePageSeo({
-  title: 'Handmade Jewellery in Nairobi',
+  title: 'Fine Gold Jewellery, Handmade in Nairobi',
   description:
-    'Shop rings, necklaces, earrings and bracelets made and finished in Nairobi. Sterling silver, gold vermeil, copper and Maasai beadwork from Ksh 1,800.',
+    'Rings, necklaces, earrings and bracelets in 18k gold vermeil, set and finished by hand in Nairobi. Free delivery in Nairobi over Ksh 5,000.',
   path: '/',
+  image: PHOTOS.hero.src,
+  imageAlt: PHOTOS.hero.alt,
 })
 useJsonLd({
   '@context': 'https://schema.org',
@@ -32,98 +50,126 @@ useJsonLd({
 
 <template>
   <div>
-    <!-- Hero: a live 3D ring turning under a spotlight, in front of the shop's name. -->
-    <section class="relative h-[100svh] min-h-[640px] overflow-hidden" aria-labelledby="hero-heading">
-      <div class="bg-spotlight reveal-light absolute inset-0" aria-hidden="true" />
-      <p
-        aria-hidden="true"
-        class="reveal-word pointer-events-none absolute inset-x-0 top-[22%] select-none text-center font-display text-display-xl text-transparent"
-        style="background: linear-gradient(180deg, #f0e2c6 0%, #9e8c6e 70%, rgba(158,140,110,0.1) 100%); -webkit-background-clip: text; background-clip: text;"
-      >
-        Shaba
-      </p>
-      <div class="absolute inset-0">
-        <JewelCanvas :spec="HERO_JEWEL" scroll-linked :framing="1.05" label="A gold ring set with a green tsavorite, turning slowly" />
+    <!-- Hero: one full-bleed photograph, the way fine-jewellery houses open. -->
+    <section class="relative h-[100svh] min-h-[620px] overflow-hidden bg-ink text-paper" aria-labelledby="hero-heading">
+      <div class="absolute inset-0 will-change-transform" :style="{ transform: `translate3d(0, ${heroShift}px, 0)` }">
+        <NuxtImg
+          :src="PHOTOS.hero.src"
+          :alt="PHOTOS.hero.alt"
+          width="1920"
+          height="1280"
+          fit="crop"
+          sizes="100vw"
+          preload
+          fetchpriority="high"
+          class="hero-photo h-full w-full object-cover object-[50%_30%]"
+        />
       </div>
-      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-velvet-deep to-transparent" aria-hidden="true" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/30" aria-hidden="true" />
 
-      <div class="container-page reveal-copy absolute inset-x-0 bottom-0 flex flex-col gap-8 pb-10 sm:pb-14 md:flex-row md:items-end md:justify-between">
-        <div class="max-w-xl">
-          <h1 id="hero-heading" class="text-display-sm text-mist">Jewellery made by hand in Nairobi</h1>
-          <p class="mt-4 max-w-md leading-relaxed text-mist/70">
-            Sterling silver, gold vermeil, hammered copper and Maasai beadwork, set and polished at our bench in Westlands.
-          </p>
-          <div class="mt-7 flex flex-wrap gap-3">
-            <NuxtLink to="/shop" class="btn-primary">Shop the collection</NuxtLink>
-            <NuxtLink to="/shop/rings" class="btn-ghost">See the rings</NuxtLink>
-          </div>
+      <div class="container-page hero-copy absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
+        <p class="label text-paper/80">The Shaba Gold Edit</p>
+        <h1 id="hero-heading" class="mt-5 max-w-4xl text-display-lg">Fine gold jewellery, finished by hand in Nairobi</h1>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <NuxtLink to="/shop" class="btn-light">Shop the collection</NuxtLink>
+          <NuxtLink to="/shop/rings" class="btn border border-paper/60 text-paper hover:bg-paper hover:text-ink">Discover rings</NuxtLink>
         </div>
-        <p class="hidden max-w-[16rem] text-right text-xs leading-relaxed text-mist/45 md:block">
-          Shown: solitaire in gold vermeil with a tsavorite, the green garnet first found in Tsavo.
-        </p>
       </div>
     </section>
 
-    <!-- Categories: four tall panels, like display cases. -->
-    <section class="container-page pt-24" aria-labelledby="cat-heading">
-      <h2 id="cat-heading" class="text-display-md text-mist">Find your piece</h2>
-      <ul class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+    <!-- Shop by category: four portrait photos, label underneath. -->
+    <section class="container-page pt-20 sm:pt-28" aria-labelledby="cat-heading">
+      <div class="flex items-end justify-between gap-6">
+        <h2 id="cat-heading" class="text-display-sm">Shop by category</h2>
+        <NuxtLink to="/shop" class="link-underline hidden sm:inline-block">Shop all</NuxtLink>
+      </div>
+      <ul class="mt-10 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 lg:grid-cols-4">
         <li v-for="c in CATEGORIES" :key="c">
-          <NuxtLink :to="`/shop/${c}`" class="group relative block aspect-[3/4] overflow-hidden rounded-[3px]">
-            <NuxtImg
-              :src="`/images/products/${CATEGORY_IMAGE[c]}.webp`"
-              alt=""
-              width="480"
-              height="640"
-              fit="cover"
-              sizes="50vw md:25vw lg:300px"
-              loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-[1200ms] ease-cinematic group-hover:scale-110"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-velvet-deep via-velvet-deep/10 to-transparent" />
-            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6">
-              <span class="block font-display text-3xl text-mist transition group-hover:text-champagne sm:text-4xl">{{ CATEGORY_INFO[c].label }}</span>
-              <span class="mt-2 hidden text-sm leading-snug text-mist/60 sm:block">{{ CATEGORY_INFO[c].blurb }}</span>
+          <NuxtLink :to="`/shop/${c}`" class="group block">
+            <div class="aspect-[3/4] overflow-hidden bg-stone">
+              <NuxtImg
+                :src="CATEGORY_PHOTOS[c].src"
+                :alt="CATEGORY_PHOTOS[c].alt"
+                width="600"
+                height="800"
+                fit="crop"
+                sizes="50vw lg:25vw xl:340px"
+                loading="lazy"
+                class="h-full w-full object-cover transition-transform duration-[1400ms] ease-cinematic group-hover:scale-[1.06]"
+              />
             </div>
+            <span class="mt-4 flex items-center justify-between">
+              <span class="font-display text-xl sm:text-2xl">{{ CATEGORY_INFO[c].label }}</span>
+              <span class="label text-ink-soft transition group-hover:text-gold">Shop</span>
+            </span>
           </NuxtLink>
         </li>
       </ul>
     </section>
 
-    <section class="container-page pt-28" aria-labelledby="featured-heading">
-      <div class="flex items-end justify-between gap-4">
-        <h2 id="featured-heading" class="text-display-md text-mist">Most loved</h2>
-        <NuxtLink to="/shop" class="pb-3 text-sm text-champagne underline-offset-8 hover:underline">See everything</NuxtLink>
+    <section class="container-page pt-24 sm:pt-32" aria-labelledby="featured-heading">
+      <div class="text-center">
+        <p class="label text-gold">Bestsellers</p>
+        <h2 id="featured-heading" class="mt-3 text-display-md">Most loved</h2>
       </div>
-      <div class="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
+      <div class="mt-12 grid grid-cols-2 gap-x-3 gap-y-12 sm:gap-x-5 md:grid-cols-3">
         <ProductCard v-for="p in featured ?? []" :key="p.id" :product="p" />
+      </div>
+      <div class="mt-14 text-center">
+        <NuxtLink to="/shop" class="btn-outline">View all jewellery</NuxtLink>
       </div>
     </section>
 
-    <section class="container-page pt-32" aria-labelledby="studio-heading">
-      <div class="grid gap-12 border-t border-mist/10 pt-16 md:grid-cols-[3fr,2fr]">
-        <h2 id="studio-heading" class="max-w-3xl text-display-sm leading-tight text-mist">
-          Every piece is set, polished and checked at our bench before it leaves the studio.
-        </h2>
-        <dl class="grid grid-cols-2 gap-x-6 gap-y-8 self-end text-sm">
-          <div>
-            <dt class="text-mist/50">Silver</dt>
-            <dd class="mt-1 text-mist">925 sterling, rhodium plated</dd>
-          </div>
-          <div>
-            <dt class="text-mist/50">Gold</dt>
-            <dd class="mt-1 text-mist">18k vermeil and plate</dd>
-          </div>
-          <div>
-            <dt class="text-mist/50">Beadwork</dt>
-            <dd class="mt-1 text-mist">Strung by hand in Kajiado</dd>
-          </div>
-          <div>
-            <dt class="text-mist/50">Delivery</dt>
-            <dd class="mt-1 text-mist">Free in Nairobi over Ksh 5,000</dd>
-          </div>
-        </dl>
+    <!-- Editorial: a large photograph and the story of how the pieces are made. -->
+    <section class="pt-24 sm:pt-32" aria-labelledby="studio-heading">
+      <div class="grid items-center bg-stone lg:grid-cols-2">
+        <div ref="editorial" class="relative aspect-[4/5] overflow-hidden lg:aspect-auto lg:h-full lg:min-h-[760px]">
+          <NuxtImg
+            :src="PHOTOS.editorial.src"
+            :alt="PHOTOS.editorial.alt"
+            width="1100"
+            height="1375"
+            fit="crop"
+            sizes="100vw lg:50vw"
+            loading="lazy"
+            class="h-full w-full object-cover transition-[clip-path,transform] duration-[1800ms] ease-cinematic motion-reduce:transition-none"
+            :class="editorialShown ? '[clip-path:inset(0_0_0_0)] scale-100' : '[clip-path:inset(0_0_100%_0)] scale-110'"
+          />
+        </div>
+        <div class="px-6 py-16 sm:px-14 lg:px-20 xl:px-28">
+          <p class="label text-gold">Our studio</p>
+          <h2 id="studio-heading" class="mt-4 text-display-md">Made to be worn every day</h2>
+          <p class="mt-6 max-w-md leading-relaxed text-ink-soft">
+            Every piece starts as sterling silver and is finished with a thick layer of 18k gold, so it keeps its warmth
+            through showers, school runs and late dinners. Stones are set, polished and checked at our bench in Westlands
+            before anything leaves the studio.
+          </p>
+          <dl class="mt-10 grid max-w-md grid-cols-2 gap-x-8 gap-y-6 border-t border-ink/15 pt-8 text-sm">
+            <div><dt class="text-ink-soft">Gold layer</dt><dd class="mt-1">2.5 microns of 18k gold</dd></div>
+            <div><dt class="text-ink-soft">Base metal</dt><dd class="mt-1">925 sterling silver</dd></div>
+            <div><dt class="text-ink-soft">Stones</dt><dd class="mt-1">Topaz, tourmaline, sapphire</dd></div>
+            <div><dt class="text-ink-soft">Pearls</dt><dd class="mt-1">Freshwater, knotted on silk</dd></div>
+          </dl>
+          <NuxtLink to="/shop" class="btn-primary mt-12">Explore the collection</NuxtLink>
+        </div>
       </div>
+    </section>
+
+    <section class="container-page pt-20" aria-label="Our promises">
+      <ul class="grid gap-10 text-center sm:grid-cols-3">
+        <li>
+          <p class="font-display text-xl">Free delivery in Nairobi</p>
+          <p class="mt-2 text-sm text-ink-soft">On orders over Ksh 5,000, usually the next working day.</p>
+        </li>
+        <li>
+          <p class="font-display text-xl">Engraved by hand</p>
+          <p class="mt-2 text-sm text-ink-soft">Free on every ID bracelet and signet ring.</p>
+        </li>
+        <li>
+          <p class="font-display text-xl">14-day returns</p>
+          <p class="mt-2 text-sm text-ink-soft">Changed your mind? Send unworn pieces back for a full refund.</p>
+        </li>
+      </ul>
     </section>
   </div>
 </template>

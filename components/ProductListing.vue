@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CATEGORIES, CATEGORY_INFO, type Category, type Product } from '~~/shared/types'
+import { CATEGORY_PHOTOS, PHOTOS } from '~~/shared/photos'
 
 // Shared by /shop and /shop/[category] so both pages look and behave the same.
 const props = defineProps<{
@@ -8,6 +9,8 @@ const props = defineProps<{
   intro: string
   active?: Category
 }>()
+
+const banner = computed(() => (props.active ? CATEGORY_PHOTOS[props.active] : PHOTOS.editorial))
 
 const sort = ref<'featured' | 'price-asc' | 'price-desc'>('featured')
 const sorted = computed(() => {
@@ -20,53 +23,63 @@ const sorted = computed(() => {
 
 <template>
   <div>
-    <header class="bg-spotlight relative overflow-hidden pb-14 pt-32 sm:pt-40">
-      <div class="container-page relative">
-        <nav aria-label="Breadcrumb" class="text-sm text-mist/50">
+    <!-- Banner photo with the title over it -->
+    <header class="relative h-[52svh] min-h-[380px] overflow-hidden bg-ink text-paper">
+      <NuxtImg
+        :src="banner.src"
+        :alt="banner.alt"
+        width="1920"
+        height="900"
+        fit="crop"
+        sizes="100vw"
+        preload
+        fetchpriority="high"
+        class="hero-photo h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/40" aria-hidden="true" />
+      <div class="container-page hero-copy absolute inset-x-0 bottom-0 pb-10 sm:pb-14">
+        <nav aria-label="Breadcrumb" class="label text-paper/75">
           <ol class="flex gap-2">
-            <li><NuxtLink to="/" class="hover:text-champagne">Home</NuxtLink> /</li>
-            <li v-if="props.active"><NuxtLink to="/shop" class="hover:text-champagne">Shop</NuxtLink> /</li>
-            <li aria-current="page" class="text-mist/80">{{ props.active ? CATEGORY_INFO[props.active].label : 'Shop' }}</li>
+            <li><NuxtLink to="/" class="hover:text-paper">Home</NuxtLink> /</li>
+            <li v-if="props.active"><NuxtLink to="/shop" class="hover:text-paper">Shop</NuxtLink> /</li>
+            <li aria-current="page" class="text-paper">{{ props.active ? CATEGORY_INFO[props.active].label : 'Shop all' }}</li>
           </ol>
         </nav>
-        <h1 class="mt-6 text-display-md text-mist">{{ props.heading }}</h1>
-        <p class="mt-4 max-w-xl leading-relaxed text-mist/65">{{ props.intro }}</p>
+        <h1 class="mt-4 text-display-lg">{{ props.heading }}</h1>
+        <p class="mt-4 max-w-xl text-paper/85">{{ props.intro }}</p>
       </div>
     </header>
 
     <div class="container-page">
-      <div class="sticky top-16 z-30 -mx-4 flex flex-wrap items-center justify-between gap-4 border-b border-mist/10 bg-velvet-deep/85 px-4 py-4 backdrop-blur-xl sm:top-20 sm:-mx-8 sm:px-8">
-        <ul class="flex gap-2 overflow-x-auto text-sm">
+      <div class="sticky top-[96px] z-30 -mx-4 flex flex-wrap items-center justify-between gap-4 border-b border-ink/10 bg-paper/95 px-4 py-4 backdrop-blur-md sm:top-[104px] sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
+        <ul class="flex gap-6 overflow-x-auto">
           <li>
-            <NuxtLink
-              to="/shop"
-              class="block whitespace-nowrap rounded-full border px-4 py-1.5 transition"
-              :class="!props.active ? 'border-champagne bg-champagne text-velvet-deep' : 'border-mist/20 text-mist/75 hover:border-champagne hover:text-champagne'"
-            >Everything</NuxtLink>
+            <NuxtLink to="/shop" class="label whitespace-nowrap pb-1" :class="!props.active ? 'border-b border-ink' : 'text-ink-soft hover:text-ink'">All</NuxtLink>
           </li>
           <li v-for="c in CATEGORIES" :key="c">
-            <NuxtLink
-              :to="`/shop/${c}`"
-              class="block whitespace-nowrap rounded-full border px-4 py-1.5 transition"
-              :class="props.active === c ? 'border-champagne bg-champagne text-velvet-deep' : 'border-mist/20 text-mist/75 hover:border-champagne hover:text-champagne'"
-            >
+            <NuxtLink :to="`/shop/${c}`" class="label whitespace-nowrap pb-1" :class="props.active === c ? 'border-b border-ink' : 'text-ink-soft hover:text-ink'">
               {{ CATEGORY_INFO[c].label }}
             </NuxtLink>
           </li>
         </ul>
-        <label class="flex items-center gap-3 text-sm">
-          <span class="text-mist/50">Sort by</span>
-          <select v-model="sort" class="rounded-full border border-mist/20 bg-velvet-soft px-4 py-1.5 text-mist">
-            <option value="featured">Most loved</option>
-            <option value="price-asc">Price, low to high</option>
-            <option value="price-desc">Price, high to low</option>
-          </select>
-        </label>
+        <div class="flex items-center gap-6">
+          <p class="label text-ink-soft">{{ sorted.length }} {{ sorted.length === 1 ? 'piece' : 'pieces' }}</p>
+          <label class="flex items-center gap-2">
+            <span class="sr-only">Sort by</span>
+            <select v-model="sort" class="label cursor-pointer border-0 bg-transparent py-1 pr-6 focus:ring-0">
+              <option value="featured">Bestsellers</option>
+              <option value="price-asc">Price, low to high</option>
+              <option value="price-desc">Price, high to low</option>
+            </select>
+          </label>
+        </div>
       </div>
 
-      <p class="mt-6 text-sm text-mist/45">{{ sorted.length }} {{ sorted.length === 1 ? 'piece' : 'pieces' }}</p>
-      <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-14 md:grid-cols-3 lg:grid-cols-4">
-        <ProductCard v-for="(p, i) in sorted" :key="p.id" :product="p" :eager="i < 4" />
+      <p v-if="!sorted.length" class="py-24 text-center text-ink-soft">
+        Nothing here yet. <NuxtLink to="/shop" class="underline">See all jewellery</NuxtLink>.
+      </p>
+      <div v-else class="mt-10 grid grid-cols-2 gap-x-3 gap-y-12 sm:gap-x-5 md:grid-cols-3">
+        <ProductCard v-for="(p, i) in sorted" :key="p.id" :product="p" :eager="i < 3" />
       </div>
     </div>
   </div>

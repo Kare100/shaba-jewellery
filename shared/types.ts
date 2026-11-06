@@ -19,10 +19,10 @@ export interface Product {
 }
 
 export const CATEGORY_INFO: Record<Category, { label: string; blurb: string }> = {
-  rings: { label: 'Rings', blurb: 'Solitaires, stackers and signets in silver and gold vermeil.' },
-  necklaces: { label: 'Necklaces', blurb: 'Pendants, pearls and hand-beaded collars made in Kenya.' },
-  earrings: { label: 'Earrings', blurb: 'Studs, drops and hammered copper hoops for every day.' },
-  bracelets: { label: 'Bracelets', blurb: 'Tennis bracelets, stone beads and engraved brass cuffs.' },
+  rings: { label: 'Rings', blurb: 'Solitaires, halo rings and signets, set by hand in 18k gold vermeil.' },
+  necklaces: { label: 'Necklaces', blurb: 'Fine pendants, rope chains and hand-knotted freshwater pearls.' },
+  earrings: { label: 'Earrings', blurb: 'Bold hoops, everyday huggies and filigree drops.' },
+  bracelets: { label: 'Bracelets', blurb: 'Engravable ID bracelets, fine charm chains and bold links.' },
 }
 
 export function isCategory(value: string): value is Category {
