@@ -2,7 +2,7 @@
 
 A small online store for a fictional Nairobi jewellery shop, built as a take-home project.
 
-- **Live site:** _add your Vercel URL here_
+- **Live site:** [shaba-jewellery.vercel.app](https://shaba-jewellery.vercel.app/)
 - **Stack:** Nuxt 3 (TypeScript), Tailwind CSS, `@nuxt/image`, Nuxt server routes (Nitro), PostgreSQL on Neon, deployed on Vercel
 
 ## Design
